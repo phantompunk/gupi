@@ -55,7 +55,7 @@ var createFunc = func(cmd *Command, args []string) {
 		}
 
 		currDir, _ := os.Getwd()
-		fmt.Printf("Created '%s' in '%s'", file_name, filepath.Join(currDir, file_name))
+		fmt.Printf("Created '%s' in '%s'\n", file_name, filepath.Join(currDir, file_name))
 	}
 }
 

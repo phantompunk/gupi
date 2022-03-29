@@ -33,7 +33,7 @@ var listFunc = func(cmd *Command, args []string) {
 
 	fmt.Printf("NAME\t\tSIZE\t\tMODIFIED")
 	for _, files := range filelist {
-		fmt.Printf("\n%-15s %-15v %v", files.Name(), files.Size(), files.ModTime().Format("2006-01-02 15:04:05"))
+		fmt.Printf("\n%-15s %-15v %v\n", files.Name(), files.Size(), files.ModTime().Format("2006-01-02 15:04:05"))
 	}
 }
 
