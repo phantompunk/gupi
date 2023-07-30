@@ -8,7 +8,7 @@ ldflags += -X 'github.com/phantompunk/gupi/command.build=$(build)'"
 
 all:
 	go build -o $(binary) $(ldflags)
-	mv $(binary) $(GOPATH)/bin
+	mv $(binary) $(GOPATH)bin
 test:
 	go test ./... -cover -coverprofile c.out
 	go tool cover -html=c.out -o coverage.html
