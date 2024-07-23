@@ -14,10 +14,10 @@ func init() {
 	rootCmd.AddCommand(createCmd)
 }
 
-var createUsage = `Usage: brief create [options...]
+var createUsage = `Usage: gupi create [options...]
 Examples:
   # Generate a report for the week containing Feb 2, 2021
-	brief create --date 02/17/2021
+	gupi create --date 02/17/2021
 
 Options:
   --template	Path to custom template file for weekly report.

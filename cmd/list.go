@@ -14,7 +14,7 @@ func init() {
 
 var listUsage = `List all currently avaible templates.
 
-Usage: brief list
+Usage: gupi list
 Options:
 `
 

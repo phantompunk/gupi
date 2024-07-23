@@ -35,9 +35,9 @@ var versionCmd = &cobra.Command{
 
 var versionFunc = func(cmd *cobra.Command, args []string) {
 	if short {
-		fmt.Printf("brief version: v%s", version)
+		fmt.Printf("gupi version: v%s", version)
 	} else {
-		fmt.Printf("brief version: v%s, build: %s", version, build)
+		fmt.Printf("gupi version: v%s, build: %s", version, build)
 	}
 	os.Exit(0)
 }

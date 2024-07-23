@@ -13,7 +13,7 @@ var pathToFile string
 
 var addUsage = `Add a template from a file path or URL.
 
-Usage: brief add [OPTIONS] TEMPLATE
+Usage: gupi new [OPTIONS] TEMPLATE
 
 Options:
 	-f, --file	path to an existing template file

@@ -15,7 +15,7 @@ func init() {
 
 var editUsage = `Edits an existing template.
 
-Usage: brief edit TEMPLATE
+Usage: gupi edit TEMPLATE
 
 Options:
 `
