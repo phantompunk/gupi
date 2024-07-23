@@ -1,10 +1,10 @@
 .PHONY: all clean
 
 binary   = gupi
-version  = 0.0.1
+version  = 0.0.2
 build	   = $(shell git rev-parse HEAD)
-ldflags  = -ldflags "-X 'github.com/phantompunk/gupi/command.version=$(version)'
-ldflags += -X 'github.com/phantompunk/gupi/command.build=$(build)'"
+ldflags  = -ldflags "-X 'github.com/phantompunk/gupi/cmd.version=$(version)'
+ldflags += -X 'github.com/phantompunk/gupi/cmd.build=$(build)'"
 
 all:
 	go build -o $(binary) $(ldflags)
