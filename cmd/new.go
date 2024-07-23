@@ -1,14 +1,15 @@
-package command
+package cmd
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 )
 
-var filePath string
+var pathToFile string
 
 var addUsage = `Add a template from a file path or URL.
 
@@ -18,12 +19,16 @@ Options:
 	-f, --file	path to an existing template file
 `
 
-var addFunc = func(cmd *Command, args []string) {
-	if len(filePath) == 0 {
+func init() {
+	rootCmd.AddCommand(newCmd)
+}
+
+var addFunc = func(cmd *cobra.Command, args []string) {
+	if len(pathToFile) == 0 {
 		errAndExit("File path required")
 	}
 
-	if _, err := os.Stat(filePath); err != nil {
+	if _, err := os.Stat(pathToFile); err != nil {
 		errAndExit("File does not exist")
 	}
 
@@ -38,12 +43,12 @@ var addFunc = func(cmd *Command, args []string) {
 		os.Mkdir(fileDir, 0755)
 	}
 
-	f, err := ioutil.ReadFile(filePath)
+	f, err := ioutil.ReadFile(pathToFile)
 	if err != nil {
-		errAndExit(fmt.Sprintf("failed to read from %s\n", filePath))
+		errAndExit(fmt.Sprintf("failed to read from %s\n", pathToFile))
 	}
 
-	file_name := filepath.Base(filePath)
+	file_name := filepath.Base(pathToFile)
 	fileOutPath := filepath.Join(fileDir, file_name)
 	out, err := os.Create(fileOutPath)
 	if err != nil {
@@ -55,18 +60,10 @@ var addFunc = func(cmd *Command, args []string) {
 	fmt.Printf("gupi: Template '%s' was added\n", file_name)
 }
 
-func NewAddCommand() *Command {
-	cmd := &Command{
-		flags:   flag.NewFlagSet("add", flag.ExitOnError),
-		Execute: addFunc,
-	}
-
-	cmd.flags.StringVar(&filePath, "file", "", "")
-	cmd.flags.StringVar(&filePath, "f", "", "")
-
-	cmd.flags.Usage = func() {
-		fmt.Fprintln(os.Stderr, addUsage)
-	}
-
-	return cmd
+var newCmd = &cobra.Command{
+  Use: "new",
+  Short: "Add a new template",
+  Long: addUsage,
+  Run: addFunc,
 }
+

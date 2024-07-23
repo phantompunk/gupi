@@ -1,13 +1,18 @@
-package command
+package cmd
 
 import (
-	"flag"
 	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(createCmd)
+}
 
 var createUsage = `Usage: brief create [options...]
 Examples:
@@ -19,10 +24,9 @@ Options:
   --date	Date used to generate weekly report. Default is current date.
   --output 	Output directory for newly created report. Default is current directory.
 `
-
 var tmp string
 
-var createFunc = func(cmd *Command, args []string) {
+var createFunc = func(cmd *cobra.Command, args []string) {
 	if len(tmp) == 0 {
 		errAndExit("Template required")
 	}
@@ -59,20 +63,13 @@ var createFunc = func(cmd *Command, args []string) {
 	}
 }
 
-func NewCreateCommand() *Command {
-	cmd := &Command{
-		flags:   flag.NewFlagSet("create", flag.ExitOnError),
-		Execute: createFunc,
-	}
-	cmd.flags.StringVar(&tmp, "template", "", "")
-	cmd.flags.StringVar(&tmp, "t", "", "")
-
-	cmd.flags.Usage = func() {
-		fmt.Fprintln(os.Stderr, createUsage)
-	}
-
-	return cmd
+var createCmd = &cobra.Command{
+	Use: "create",
+	Short: "Create an instance of a template",
+	Long: createUsage,
+	Run: createFunc,
 }
+
 
 type weekYear struct {
 	Week int
@@ -115,3 +112,4 @@ func getDates(start time.Time) *weekYear {
 
 	return &weekYear{week, year, monday, tuesday, wednesday, thursday, friday}
 }
+

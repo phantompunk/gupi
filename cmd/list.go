@@ -1,11 +1,16 @@
-package command
+package cmd
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(listCmd)
+}
 
 var listUsage = `List all currently avaible templates.
 
@@ -13,7 +18,7 @@ Usage: brief list
 Options:
 `
 
-var listFunc = func(cmd *Command, args []string) {
+var listFunc = func(cmd *cobra.Command, args []string) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		errAndExit("Failed to read home directory")
@@ -37,15 +42,9 @@ var listFunc = func(cmd *Command, args []string) {
 	}
 }
 
-func NewListCommand() *Command {
-	cmd := &Command{
-		flags:   flag.NewFlagSet("list", flag.ExitOnError),
-		Execute: listFunc,
-	}
-
-	cmd.flags.Usage = func() {
-		fmt.Fprintln(os.Stderr, listUsage)
-	}
-
-	return cmd
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List available templates",
+	Long:  listUsage,
+	Run:   listFunc,
 }
