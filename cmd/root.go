@@ -13,8 +13,6 @@ var rootCmd = &cobra.Command{
 	Long: `Usage: gupi command [options]
 A simple tool to generate and manage custom templates
 `,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
 }
 
 func Execute() {
