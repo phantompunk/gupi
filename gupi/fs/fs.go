@@ -33,6 +33,19 @@ func GetTemplatePath(file string) (string, error) {
 	return filepath.Join(homeDir, appDir, tmplDir, file), nil
 }
 
+func DeleteFile(file string) error {
+	fullPath, err := GetTemplatePath(file)
+	if err != nil {
+		return err
+	}
+
+	err = os.Remove(fullPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func ReadTemplates() ([]os.FileInfo, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {

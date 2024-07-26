@@ -27,6 +27,15 @@ func AddTemplate(tmplName, pathToFile, urlToFile string) error {
 	return nil
 }
 
+func DeleteTemplate(tmplName string) error {
+	err := fs.DeleteFile(tmplName)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("gupi: Template '%s' was deleted\n", tmplName)
+	return nil
+}
+
 func createEmptyTemplate(tmplName string) error {
 	// Create a file
 	err := fs.CreateFile(tmplName)
