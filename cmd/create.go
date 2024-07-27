@@ -2,17 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"html/template"
-	"os"
-	"path/filepath"
 	"time"
 
+	"github.com/phantompunk/gupi/gupi"
 	"github.com/spf13/cobra"
 )
-
-func init() {
-	rootCmd.AddCommand(createCmd)
-}
 
 var createUsage = `Usage: gupi create [options...]
 Examples:
@@ -24,52 +18,72 @@ Options:
   --date	Date used to generate weekly report. Default is current date.
   --output 	Output directory for newly created report. Default is current directory.
 `
-var tmp string
+var tmplName string
+var fileName string
 
 var createFunc = func(cmd *cobra.Command, args []string) {
-	if len(tmp) == 0 {
-		errAndExit("Template required")
+	if len(args) < 1 {
+		errAndExit("Needs a file name")
 	}
 
-	file_name := args[0]
+	fileName = args[0]
+	if len(tmplName) == 0 || len(fileName) == 0 {
+		fmt.Println("File:"+fileName)
+		fmt.Println("Tmp:"+tmplName)
+		errAndExit("Template name and file name are required")
+	}
 
-	homeDir, err := os.UserHomeDir()
+	err := gupi.RenderTemplate(fileName, tmplName)
 	if err != nil {
-		errAndExit("Failed to return user's home directory")
+		errAndExit("Unable to render template" + templateName)
 	}
-
-	path := filepath.Join(homeDir, ".gupi", "template", tmp)
-	if _, err := os.Stat(path); err == nil {
-		date := time.Now()
-		data := getDates(date)
-
-		t, err := template.ParseFiles(path)
-		if err != nil {
-			errAndExit("Failed to parse template")
-		}
-
-		f, err := os.Create(file_name)
-		if err != nil {
-			errAndExit("Failed to create template instance")
-		}
-
-		err = t.Execute(f, data)
-		if err != nil {
-			errAndExit("Failed to execute template")
-		}
-
-		currDir, _ := os.Getwd()
-		fmt.Printf("Created '%s' in '%s'\n", file_name, filepath.Join(currDir, file_name))
-	}
+	// if len(tmp) == 0 {
+	// 	errAndExit("Template required")
+	// }
+	//
+	// file_name := args[0]
+	//
+	// homeDir, err := os.UserHomeDir()
+	// if err != nil {
+	// 	errAndExit("Failed to return user's home directory")
+	// }
+	//
+	// path := filepath.Join(homeDir, ".gupi", "template", tmp)
+	// if _, err := os.Stat(path); err == nil {
+	// 	date := time.Now()
+	// 	data := getDates(date)
+	//
+	// 	t, err := template.ParseFiles(path)
+	// 	if err != nil {
+	// 		errAndExit("Failed to parse template")
+	// 	}
+	//
+	// 	f, err := os.Create(file_name)
+	// 	if err != nil {
+	// 		errAndExit("Failed to create template instance")
+	// 	}
+	//
+	// 	err = t.Execute(f, data)
+	// 	if err != nil {
+	// 		errAndExit("Failed to execute template")
+	// 	}
+	//
+	// 	currDir, _ := os.Getwd()
+	// 	fmt.Printf("Created '%s' in '%s'\n", file_name, filepath.Join(currDir, file_name))
+	// }
 }
 
 var createCmd = &cobra.Command{
-	Use: "create",
+	Use:   "create",
 	Short: "Create an instance of a template",
-	Long: createUsage,
-	Run: createFunc,
+	Long:  createUsage,
+	Run:   createFunc,
 }
 
+func init() {
+	createCmd.Flags().StringVarP(&tmplName, "template", "t", "", "")
+	rootCmd.AddCommand(createCmd)
+}
 
 type weekYear struct {
 	Week int
@@ -112,4 +126,3 @@ func getDates(start time.Time) *weekYear {
 
 	return &weekYear{week, year, monday, tuesday, wednesday, thursday, friday}
 }
-
