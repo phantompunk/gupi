@@ -27,6 +27,26 @@ func AddTemplate(tmplName, pathToFile, urlToFile string) error {
 	return nil
 }
 
+func EditTemplate(tmplName string) error {
+	fullPath, err := fs.GetTemplatePath(tmplName)
+	if err != nil {
+		return err
+	}
+
+	_, err = os.Stat(fullPath)
+	if os.IsNotExist(err) {
+		return err
+	} else if err != nil {
+		return err
+	} else {
+		err := openWithEditor(fullPath)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func DeleteTemplate(tmplName string) error {
 	err := fs.DeleteFile(tmplName)
 	if err != nil {
