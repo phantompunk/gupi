@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/phantompunk/gupi/gupi"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +16,7 @@ var listCmd = &cobra.Command{
 	Short: "List available templates",
 	Long: "List all currently avaible templates",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := gupi.Display(); err != nil {
+		if err := editor.List(); err != nil {
 			fmt.Fprint(os.Stderr, err.Error(), "\n")
 			os.Exit(1)
 		}

@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/phantompunk/gupi/gupi"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +16,7 @@ var editCmd = &cobra.Command{
 		}
 
 		templateName := args[0]
-		err := gupi.EditTemplate(templateName)
+		err := editor.Edit(templateName)
 		if err != nil {
 			errAndExit("Unable to edit template")
 		}

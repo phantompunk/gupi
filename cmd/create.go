@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/phantompunk/gupi/gupi"
 	"github.com/spf13/cobra"
 )
 
@@ -18,25 +17,35 @@ Options:
   --date	Date used to generate weekly report. Default is current date.
   --output 	Output directory for newly created report. Default is current directory.
 `
-var tmplName string
-var fileName string
 
 var createFunc = func(cmd *cobra.Command, args []string) {
 	if len(args) < 1 {
 		errAndExit("Needs a file name")
 	}
 
-	fileName = args[0]
-	if len(tmplName) == 0 || len(fileName) == 0 {
-		fmt.Println("File:"+fileName)
-		fmt.Println("Tmp:"+tmplName)
-		errAndExit("Template name and file name are required")
-	}
-
-	err := gupi.RenderTemplate(fileName, tmplName)
+	templateName = args[0]
+	err := editor.Create(templateName)
 	if err != nil {
-		errAndExit("Unable to render template" + templateName)
+		errAndExit("Not able to create a template")
 	}
+	///////////////////////////////////////////////////////
+	// if len(args) < 1 {
+	// 	errAndExit("Needs a file name")
+	// }
+	//
+	// fileName = args[0]
+	// if len(tmplName) == 0 || len(fileName) == 0 {
+	// 	fmt.Println("File:"+fileName)
+	// 	fmt.Println("Tmp:"+tmplName)
+	// 	errAndExit("Template name and file name are required")
+	// }
+	//
+	// err := gupi.RenderTemplate(fileName, tmplName)
+	// if err != nil {
+	// 	errAndExit("Unable to render template" + templateName)
+	// }
+
+	///////////////////////////////////////////////////////
 	// if len(tmp) == 0 {
 	// 	errAndExit("Template required")
 	// }
@@ -81,7 +90,7 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	createCmd.Flags().StringVarP(&tmplName, "template", "t", "", "")
+	// createCmd.Flags().StringVarP(&tmplName, "template", "t", "", "")
 	rootCmd.AddCommand(createCmd)
 }
 

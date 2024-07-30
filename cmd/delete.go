@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/phantompunk/gupi/gupi"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +10,7 @@ var deleteFunc = func(cmd *cobra.Command, args []string) {
 	}
 
 	fileName := args[0]
-	err := gupi.DeleteTemplate(fileName)
+	err := editor.Delete(fileName)
 	if err != nil {
 		errAndExit("Failed to remove template: " + fileName)
 	}
