@@ -30,6 +30,28 @@ func TestCreateTemplate(t *testing.T) {
 	}
 }
 
+func TestCreateTemplateFromTemplate(t *testing.T) {
+	testFS := setupFS()
+	afero.WriteFile(testFS, "src/test_template", []byte("Sample Template"), 0644)
+
+	fileStore := store.NewFileStore("src/templates", testFS)
+	fileStore.CreateTemplateFromFile("test", "src/test_template")
+
+	name := "src/templates/test"
+	if _, err := testFS.Stat(name); err != nil {
+		t.Errorf("file '%s' does not exist", name)
+	}
+
+	test, err := afero.ReadFile(testFS, name)
+	if err != nil {
+	}
+
+	actual := string(test)
+	if actual != "Sample Template" {
+		t.Errorf("Actual '%s', expected '%s'", actual, "Sample Template")
+	}
+}
+
 func TestDeleteTemplate(t *testing.T) {
 	testFS := setupFS()
 	afero.WriteFile(testFS, "src/templates/test", []byte("Test Template"), 0644)

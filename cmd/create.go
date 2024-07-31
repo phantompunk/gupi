@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var pathToTemplate string
 var createUsage = `Usage: gupi create [options...]
 Examples:
   # Generate a report for the week containing Feb 2, 2021
@@ -24,7 +25,7 @@ var createFunc = func(cmd *cobra.Command, args []string) {
 	}
 
 	templateName = args[0]
-	err := editor.Create(templateName)
+	err := editor.Create(templateName, pathToTemplate)
 	if err != nil {
 		errAndExit("Not able to create a template")
 	}
@@ -84,13 +85,12 @@ var createFunc = func(cmd *cobra.Command, args []string) {
 
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create an instance of a template",
-	Long:  createUsage,
+	Short: "Create a new template",
 	Run:   createFunc,
 }
 
 func init() {
-	// createCmd.Flags().StringVarP(&tmplName, "template", "t", "", "")
+	createCmd.Flags().StringVarP(&pathToTemplate, "file", "f", "", "Path to template")
 	rootCmd.AddCommand(createCmd)
 }
 
