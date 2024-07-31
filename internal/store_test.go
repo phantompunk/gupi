@@ -22,7 +22,7 @@ func TestCreateTemplate(t *testing.T) {
 	testFS := setupFS()
 
 	filestore := store.NewFileStore("src/templates", testFS)
-	filestore.CreateTemplate("test")
+	filestore.CreateTemplate("test", "")
 
 	_, err := testFS.Stat("src/templates/test")
 	if os.IsNotExist(err) {
@@ -35,7 +35,7 @@ func TestCreateTemplateFromTemplate(t *testing.T) {
 	afero.WriteFile(testFS, "src/test_template", []byte("Sample Template"), 0644)
 
 	fileStore := store.NewFileStore("src/templates", testFS)
-	fileStore.CreateTemplateFromFile("test", "src/test_template")
+	fileStore.CreateTemplate("test", "src/test_template")
 
 	name := "src/templates/test"
 	if _, err := testFS.Stat(name); err != nil {

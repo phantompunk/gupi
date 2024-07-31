@@ -8,8 +8,7 @@ import (
 )
 
 type Store interface {
-	CreateTemplate(templateName string) error
-	CreateTemplateFromFile(templateName, pathToTemplate string) error
+	CreateTemplate(templateName, pathToTemplate string) error
 	DeleteTemplate(templateName string) error
 	GetPathToTemplate(templateName string) string
 	ListTemplates() ([]os.FileInfo, error)
@@ -35,28 +34,21 @@ func (fstore *FileStore) CreateFile(fileName, filePath string) (afero.File, erro
 	return file, nil
 }
 
-func (fstore *FileStore) CreateTemplate(templateName string) error {
-	templatePath := fstore.GetPathToTemplate(templateName)
-	_, err := fstore.fileSystem.Create(templatePath)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (fstore *FileStore) CreateTemplateFromFile(templateName, pathToTemplate string) error {
+func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string) error {
 	templatePath := fstore.GetPathToTemplate(templateName)
 	file, err := fstore.fileSystem.Create(templatePath)
 	if err != nil {
 		return err
 	}
 
-	data, err := afero.ReadFile(fstore.fileSystem, pathToTemplate)
-	if err != nil {
-		return err
-	}
+	if len(pathToTemplate) > 0 {
+		data, err := afero.ReadFile(fstore.fileSystem, pathToTemplate)
+		if err != nil {
+			return err
+		}
 
-	file.WriteString(string(data))
+		file.WriteString(string(data))
+	}
 	return nil
 }
 
