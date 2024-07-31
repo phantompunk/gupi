@@ -22,6 +22,9 @@ type FileStore struct {
 }
 
 func NewFileStore(basePath string, fileSystem afero.Fs) *FileStore {
+	if _, err := fileSystem.Stat(basePath); os.IsNotExist(err) {
+		fileSystem.MkdirAll(basePath, os.ModePerm)
+	}
 	return &FileStore{basePath: basePath, fileSystem: fileSystem}
 }
 

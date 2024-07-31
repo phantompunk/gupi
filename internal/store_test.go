@@ -8,6 +8,16 @@ import (
 	"github.com/spf13/afero"
 )
 
+func TestNewFileStore(t *testing.T) {
+	testFS := afero.NewMemMapFs()
+
+	store.NewFileStore("src/templates", testFS)
+	_, err := testFS.Stat("src/templates")
+	if os.IsNotExist(err) {
+		t.Errorf("base dir '%s' does not exist", "src/templates")
+	}
+}
+
 func TestCreateTemplate(t *testing.T) {
 	testFS := setupFS()
 
