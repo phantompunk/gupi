@@ -20,7 +20,7 @@ var newCmd = &cobra.Command{
 		fileName = args[0]
 		err := editor.New(fileName, outputPath, templateName)
 		if err != nil {
-			errAndExit("Not able to add template")
+			errAndExit("Not able to add template" + err.Error())
 		}
 	},
 }

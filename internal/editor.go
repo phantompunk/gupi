@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"text/template"
+	"time"
 )
 
 type Editor struct {
@@ -18,8 +19,10 @@ func NewEditor(s Store) *Editor {
 }
 
 func (e *Editor) New(fileName, filePath, templateName string) error {
+	funcMap := initTplFunctions()
+	data := getTemplateData()
 	templatePath := e.store.GetPathToTemplate(templateName)
-	fileTemplate, err := template.ParseFiles(templatePath)
+	fileTemplate, err := template.New(templateName).Funcs(funcMap).ParseFiles(templatePath)
 	if err != nil {
 		return err
 	}
@@ -29,7 +32,7 @@ func (e *Editor) New(fileName, filePath, templateName string) error {
 		return err
 	}
 
-	err = fileTemplate.Execute(file, "")
+	err = fileTemplate.Execute(file, data)
 	if err != nil {
 		return err
 	}
@@ -56,7 +59,6 @@ func (e *Editor) Delete(templateName string) error {
 }
 
 func (e *Editor) Edit(templateName string) error {
-	// templatePath := e.store.GetTemplatePath(templateName)
 	err := e.openWithEditor(templateName)
 	if err != nil {
 		return err
@@ -91,4 +93,68 @@ func (e *Editor) openWithEditor(templateName string) error {
 		return err
 	}
 	return nil
+}
+
+func initTplFunctions() template.FuncMap {
+	return template.FuncMap{
+		"Week": Week,
+	}
+}
+
+func Week() int {
+	now := time.Now()
+	_, week := now.ISOWeek()
+	return week
+}
+
+var days = map[int]int{
+	0: -1,
+	1: 0,
+	2: 1,
+	3: 2,
+	4: 3,
+	5: 4,
+	6: -2,
+}
+
+func getTemplateData() any {
+	now := time.Now()
+	year, week := now.ISOWeek()
+
+	firstDayOfWeek := now.AddDate(0, 0, -days[int(now.Weekday())])
+	_, m, d := firstDayOfWeek.Date()
+	monday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 1).Date()
+	tuesday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 2).Date()
+	wednesday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 3).Date()
+	thursday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 4).Date()
+	friday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 5).Date()
+	saturday := fmt.Sprintf("%d.%d", m, d)
+
+	_, m, d = firstDayOfWeek.AddDate(0, 0, 6).Date()
+	sunday := fmt.Sprintf("%d.%d", m, d)
+
+	return struct {
+		Year, Week int
+		Mon, Tue, Wed, Thur, Fri, Sat, Sun string
+	}{
+		Year: year,
+		Week: week,
+		Mon: monday,
+		Tue: tuesday,
+		Wed: wednesday,
+		Thur: thursday,
+		Fri: friday,
+		Sat: saturday,
+		Sun: sunday,
+	}
 }
