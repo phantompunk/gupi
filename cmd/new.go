@@ -6,6 +6,7 @@ import (
 
 var templateName string
 var fileName string
+var outputPath string
 
 var newCmd = &cobra.Command{
 	Use: "new",
@@ -16,17 +17,8 @@ var newCmd = &cobra.Command{
 			errAndExit("Needs a file name")
 		}
 
-		// if len(pathToFile) > 0 && len(urlToFile) > 0 {
-		// 	errAndExit("Only use filepath or url, not both")
-		// }
-		//
-		// templateName = args[0]
-		// fmt.Println("Name:" + templateName)
-		// fmt.Println("Path:" + pathToFile)
-		// fmt.Println("URL:" + urlToFile)
-
 		fileName = args[0]
-		err := editor.New(fileName, templateName)
+		err := editor.New(fileName, outputPath, templateName)
 		if err != nil {
 			errAndExit("Not able to add template")
 		}
@@ -35,7 +27,6 @@ var newCmd = &cobra.Command{
 
 func init() {
 	newCmd.Flags().StringVarP(&templateName, "template", "t", "", "")
-	// newCmd.Flags().StringVarP(&pathToFile, "file", "f", "", "Path to file")
-	// newCmd.Flags().StringVarP(&urlToFile, "url", "u", "", "Url to file")
+	newCmd.Flags().StringVarP(&outputPath, "output", "o", ".", "")
 	rootCmd.AddCommand(newCmd)
 }

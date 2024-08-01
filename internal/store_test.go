@@ -41,6 +41,20 @@ func TestCreateSampleTemplate(t *testing.T) {
 	}
 }
 
+func TestCreateSampleTemplateInPath(t *testing.T) {
+	templateName := "sample"
+	templatePath := filepath.Join(baseDir, templateName)
+	err := testStore.CreateTemplate(templateName, "", true)
+	if err != nil {
+		t.Errorf("failed to create sample template '%s'", templateName)
+	}
+
+	_, err = testFS.Stat(templatePath)
+	if err != nil {
+		t.Error("sample template not found")
+	}
+}
+
 func TestCreateEmptyTemplate(t *testing.T) {
 	templateName := "test"
 	templatePath := filepath.Join(baseDir, templateName)
@@ -112,6 +126,18 @@ func TestListTemplates(t *testing.T) {
 	expected := len(rfiles)
 	if actual != expected {
 		t.Errorf("actual %d expected %d", actual, expected)
+	}
+}
+
+func TestCreateFile(t *testing.T) {
+	testFileName := "test"
+	_, err := testStore.CreateFile(testFileName, "/")
+	if err != nil {
+		t.Errorf("failed to create file '%s'", testFileName)
+	}
+
+	if _, err := testFS.Stat("/" + testFileName); err != nil {
+		t.Errorf("file \"%s\" does not exists", testFileName)
 	}
 }
 

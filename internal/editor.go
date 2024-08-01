@@ -17,14 +17,14 @@ func NewEditor(s Store) *Editor {
 	return &Editor{store: s}
 }
 
-func (e *Editor) New(fileName, templateName string) error {
+func (e *Editor) New(fileName, filePath, templateName string) error {
 	templatePath := e.store.GetPathToTemplate(templateName)
 	fileTemplate, err := template.ParseFiles(templatePath)
 	if err != nil {
 		return err
 	}
 
-	file, err := e.store.CreateFile(fileName, ".")
+	file, err := e.store.CreateFile(fileName, filePath)
 	if err != nil {
 		return err
 	}

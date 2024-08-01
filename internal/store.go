@@ -28,7 +28,8 @@ func NewFileStore(basePath string, fileSystem afero.Fs) *FileStore {
 }
 
 func (fstore *FileStore) CreateFile(fileName, filePath string) (afero.File, error) {
-	file, err := fstore.fileSystem.Create(fileName)
+	outPath := filepath.Join(filePath, fileName)
+	file, err := fstore.fileSystem.Create(outPath)
 	if err != nil {
 	}
 	return file, nil
