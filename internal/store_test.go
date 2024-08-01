@@ -2,48 +2,62 @@ package store_test
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	store "github.com/phantompunk/gupi/internal"
 	"github.com/spf13/afero"
 )
 
-func TestNewFileStore(t *testing.T) {
-	testFS := afero.NewMemMapFs()
+var (
+	testFS    afero.Fs
+	testStore store.Store
+	baseDir   string = "templates"
+)
 
-	store.NewFileStore("src/templates", testFS)
-	_, err := testFS.Stat("src/templates")
+func init() {
+	testFS = afero.NewMemMapFs()
+	testStore = store.NewFileStore(baseDir, testFS)
+}
+
+func TestNewFileStore(t *testing.T) {
+	_, err := testFS.Stat(baseDir)
 	if os.IsNotExist(err) {
-		t.Errorf("base dir '%s' does not exist", "src/templates")
+		t.Errorf("base dir '%s' does not exist", baseDir)
 	}
 }
 
-func TestCreateTemplate(t *testing.T) {
-	testFS := setupFS()
+func TestCreateEmptyTemplate(t *testing.T) {
+	templateName := "test"
+	templatePath := filepath.Join(baseDir, templateName)
+	err := testStore.CreateTemplate(templateName, "")
+	if err != nil {
+		t.Errorf("failed to create template '%s'", templateName)
+	}
 
-	filestore := store.NewFileStore("src/templates", testFS)
-	filestore.CreateTemplate("test", "")
-
-	_, err := testFS.Stat("src/templates/test")
+	_, err = testFS.Stat(templatePath)
 	if os.IsNotExist(err) {
-		t.Errorf("file '%s' does not exist", "test")
+		t.Errorf("file '%s' does not exist", templateName)
 	}
 }
 
 func TestCreateTemplateFromTemplate(t *testing.T) {
-	testFS := setupFS()
-	afero.WriteFile(testFS, "src/test_template", []byte("Sample Template"), 0644)
+	templateName := "test_template"
+	templatePath := filepath.Join(baseDir, templateName)
+	createTestFile(t, templatePath, []byte("Sample Template"))
 
-	fileStore := store.NewFileStore("src/templates", testFS)
-	fileStore.CreateTemplate("test", "src/test_template")
-
-	name := "src/templates/test"
-	if _, err := testFS.Stat(name); err != nil {
-		t.Errorf("file '%s' does not exist", name)
+	err := testStore.CreateTemplate("test", templatePath)
+	if err != nil {
+		t.Errorf("failed to create template '%s'", templateName)
 	}
 
-	test, err := afero.ReadFile(testFS, name)
+	if _, err := testFS.Stat(templatePath); err != nil {
+		t.Errorf("file '%s' does not exist", templateName)
+	}
+
+	test, err := afero.ReadFile(testFS, templatePath)
 	if err != nil {
+		t.Errorf("failed reading file '%s'", templatePath)
 	}
 
 	actual := string(test)
@@ -53,28 +67,26 @@ func TestCreateTemplateFromTemplate(t *testing.T) {
 }
 
 func TestDeleteTemplate(t *testing.T) {
-	testFS := setupFS()
-	afero.WriteFile(testFS, "src/templates/test", []byte("Test Template"), 0644)
+	templateName := "test"
+	templatePath := filepath.Join(baseDir, templateName)
+	createTestFile(t, templatePath, []byte("Test Template"))
 
-	fileStore := store.NewFileStore("src/templates", testFS)
-	err := fileStore.DeleteTemplate("test")
+	err := testStore.DeleteTemplate(templateName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	name := "src/templates/test"
-	if _, err := testFS.Stat(name); err == nil {
-		t.Errorf("file \"%s\" still exists", name)
+	if _, err := testFS.Stat(templatePath); err == nil {
+		t.Errorf("file \"%s\" still exists", templateName)
 	}
 }
 
 func TestListTemplates(t *testing.T) {
-	testFS := afero.NewMemMapFs()
-	testFS.MkdirAll("templates", 0755)
-	afero.WriteFile(testFS, "templates/test", []byte("Test Template"), 0644)
+	templateName := "test"
+	templatePath := filepath.Join(baseDir, templateName)
+	createTestFile(t, templatePath, []byte("Test Template"))
 
-	fileStore := store.NewFileStore("", testFS)
-	filelist, err := fileStore.ListTemplates()
+	filelist, err := testStore.ListTemplates()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,8 +101,10 @@ func TestListTemplates(t *testing.T) {
 	}
 }
 
-func setupFS() afero.Fs {
-	testFS := afero.NewMemMapFs()
-	testFS.MkdirAll("src/templates", 0755)
-	return testFS
+func createTestFile(t *testing.T, templatePath string, data []byte) {
+	t.Helper()
+	err := afero.WriteFile(testFS, templatePath, data, 0644)
+	if err != nil {
+		t.Errorf("error creating test file '%s'", err.Error())
+	}
 }
