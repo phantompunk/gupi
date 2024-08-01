@@ -39,8 +39,8 @@ func (e *Editor) New(fileName, templateName string) error {
 	return nil
 }
 
-func (e *Editor) Create(templateName, pathToTemplate string) error {
-	err := e.store.CreateTemplate(templateName, pathToTemplate)
+func (e *Editor) Create(templateName, pathToTemplate string, useSampleTemplate bool) error {
+	err := e.store.CreateTemplate(templateName, pathToTemplate, useSampleTemplate)
 	if err != nil {
 		return err
 	}

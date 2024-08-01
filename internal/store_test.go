@@ -27,6 +27,20 @@ func TestNewFileStore(t *testing.T) {
 	}
 }
 
+func TestCreateSampleTemplate(t *testing.T) {
+	templateName := "sample"
+	templatePath := filepath.Join(baseDir, templateName)
+	err := testStore.CreateTemplate(templateName, "", true)
+	if err != nil {
+		t.Errorf("failed to create sample template '%s'", templateName)
+	}
+
+	_, err = testFS.Stat(templatePath)
+	if err != nil {
+		t.Error("sample template not found")
+	}
+}
+
 func TestCreateEmptyTemplate(t *testing.T) {
 	templateName := "test"
 	templatePath := filepath.Join(baseDir, templateName)

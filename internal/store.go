@@ -8,7 +8,7 @@ import (
 )
 
 type Store interface {
-	CreateTemplate(templateName, pathToTemplate string) error
+	CreateTemplate(templateName, pathToTemplate string, useSample ...bool) error
 	DeleteTemplate(templateName string) error
 	GetPathToTemplate(templateName string) string
 	ListTemplates() ([]os.FileInfo, error)
@@ -34,11 +34,19 @@ func (fstore *FileStore) CreateFile(fileName, filePath string) (afero.File, erro
 	return file, nil
 }
 
-func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string) error {
+func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, useSample ...bool) error {
 	templatePath := fstore.GetPathToTemplate(templateName)
 	file, err := fstore.fileSystem.Create(templatePath)
 	if err != nil {
 		return err
+	}
+
+	if len(useSample) > 0 {
+		err := fstore.createSampleTemplate(file)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 
 	if len(pathToTemplate) > 0 {
@@ -81,4 +89,13 @@ func (fstore *FileStore) ListTemplates() ([]os.FileInfo, error) {
 
 func (fstore *FileStore) GetPathToTemplate(templateName string) string {
 	return filepath.Join(fstore.basePath, templateName)
+}
+
+func (fstore *FileStore) createSampleTemplate(file afero.File) error {
+	const sampleTemplate string = `# 🗓 8.1 Thur`
+	_, err := file.WriteString(string(sampleTemplate))
+	if err != nil {
+		return err
+	}
+	return nil
 }
