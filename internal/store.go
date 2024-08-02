@@ -1,6 +1,8 @@
 package store
 
 import (
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -36,28 +38,57 @@ func (fstore *FileStore) CreateFile(fileName, filePath string) (afero.File, erro
 }
 
 func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, useSample ...bool) error {
+	// Create an empty template
 	templatePath := fstore.GetPathToTemplate(templateName)
 	file, err := fstore.fileSystem.Create(templatePath)
 	if err != nil {
 		return err
 	}
 
-	if len(useSample) > 0 {
-		err := fstore.createSampleTemplate(file)
+	// Create template from url
+	if isURLPath(pathToTemplate) {
+		res, err := http.Get(pathToTemplate)
+		if err != nil {
+			return err
+		}
+		defer res.Body.Close()
+
+		body, err := afero.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+
+		_, err = file.WriteString(string(body))
 		if err != nil {
 			return err
 		}
 		return nil
 	}
 
-	if len(pathToTemplate) > 0 {
+	// Create template from file
+	if isFilePath(pathToTemplate) {
 		data, err := afero.ReadFile(fstore.fileSystem, pathToTemplate)
 		if err != nil {
 			return err
 		}
 
-		file.WriteString(string(data))
+		_, err = file.WriteString(string(data))
+		if err != nil {
+			return err
+		}
 	}
+
+	// Create sample template
+	if useSampleTemplate(useSample) {
+		if len(useSample) > 0 && useSample[0] {
+			err := fstore.createSampleTemplate(file)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+
 	return nil
 }
 
@@ -99,4 +130,24 @@ func (fstore *FileStore) createSampleTemplate(file afero.File) error {
 		return err
 	}
 	return nil
+}
+
+func isURLPath(urlPath string) bool {
+	_, err := url.ParseRequestURI(urlPath)
+	return err == nil
+}
+
+func isFilePath(filePath string) bool {
+	if _, err := os.Stat(filePath); err == nil {
+		return true
+	}
+	return false
+}
+
+func useSampleTemplate(bools []bool) bool {
+	anyTrue := false
+	for _, b := range bools {
+		anyTrue = anyTrue && b
+	}
+	return anyTrue
 }

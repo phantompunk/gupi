@@ -55,6 +55,15 @@ func TestCreateSampleTemplateInPath(t *testing.T) {
 	}
 }
 
+func TestCreateTemplateFromURL(t *testing.T) {
+	templateName := "test"
+	templatePath := "https://myfiles.com/template"
+	err := testStore.CreateTemplate(templateName, templatePath)
+	if err != nil {
+		t.Error("failed to create template from URL")
+	}
+}
+
 func TestCreateEmptyTemplate(t *testing.T) {
 	templateName := "test"
 	templatePath := filepath.Join(baseDir, templateName)

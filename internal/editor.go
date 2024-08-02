@@ -145,14 +145,14 @@ func getTemplateData() any {
 
 	return struct {
 		Year, Week int
-		Mon, Tue, Wed, Thur, Fri, Sat, Sun string
+		Mon, Tue, Wed, Thu, Fri, Sat, Sun string
 	}{
 		Year: year,
 		Week: week,
 		Mon: monday,
 		Tue: tuesday,
 		Wed: wednesday,
-		Thur: thursday,
+		Thu: thursday,
 		Fri: friday,
 		Sat: saturday,
 		Sun: sunday,

@@ -27,6 +27,6 @@ var createCmd = &cobra.Command{
 
 func init() {
 	createCmd.Flags().BoolVarP(&sampleTemplate, "sample", "s", false, "Use a sample template")
-	createCmd.Flags().StringVarP(&pathToTemplate, "file", "f", "", "Path to template")
+	createCmd.Flags().StringVarP(&pathToTemplate, "file", "f", ".", "Path to template")
 	rootCmd.AddCommand(createCmd)
 }
