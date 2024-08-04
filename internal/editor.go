@@ -83,7 +83,7 @@ func (e *Editor) List() error {
 func (e *Editor) openWithEditor(templateName string) error {
 	templatePath := e.store.GetPathToTemplate(templateName)
 
-	fmt.Print("Opening in vim")
+	fmt.Println("Opening in vim")
 	command := exec.Command("vim", templatePath)
 	command.Stdout = os.Stdout
 	command.Stdin = os.Stdin
