@@ -30,7 +30,7 @@ func TestNewFileStore(t *testing.T) {
 func TestCreateSampleTemplate(t *testing.T) {
 	templateName := "sample"
 	templatePath := filepath.Join(baseDir, templateName)
-	err := testStore.CreateTemplate(templateName, "", true)
+	err := testStore.CreateTemplate(templateName, ".", true)
 	if err != nil {
 		t.Errorf("failed to create sample template '%s'", templateName)
 	}
@@ -58,7 +58,7 @@ func TestCreateSampleTemplateInPath(t *testing.T) {
 func TestCreateTemplateFromURL(t *testing.T) {
 	templateName := "test"
 	templatePath := "https://myfiles.com/template"
-	err := testStore.CreateTemplate(templateName, templatePath)
+	err := testStore.CreateTemplate(templateName, templatePath, false)
 	if err != nil {
 		t.Error("failed to create template from URL")
 	}
@@ -67,7 +67,7 @@ func TestCreateTemplateFromURL(t *testing.T) {
 func TestCreateEmptyTemplate(t *testing.T) {
 	templateName := "test"
 	templatePath := filepath.Join(baseDir, templateName)
-	err := testStore.CreateTemplate(templateName, "")
+	err := testStore.CreateTemplate(templateName, "", false)
 	if err != nil {
 		t.Errorf("failed to create template '%s'", templateName)
 	}
@@ -83,7 +83,7 @@ func TestCreateTemplateFromTemplate(t *testing.T) {
 	templatePath := filepath.Join(baseDir, templateName)
 	createTestFile(t, templatePath, []byte("Sample Template"))
 
-	err := testStore.CreateTemplate("test", templatePath)
+	err := testStore.CreateTemplate("test", templatePath, false)
 	if err != nil {
 		t.Errorf("failed to create template '%s'", templateName)
 	}

@@ -1,6 +1,7 @@
 package store
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -9,8 +10,69 @@ import (
 	"github.com/spf13/afero"
 )
 
+const sampletemplate =`# 🗓 Week {{ .Week }} of [[Tasks {{ .Year }}|{{ .Year }}]]
+
+## 🗓 {{ .Mon }} Mon
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---------
+## 🗓 {{ .Tue }} Tue
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---------
+## 🗓 {{ .Wed }} Wed
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---------
+## 🗓 {{ .Thu }} Thu
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---------
+## 🗓 {{ .Fri }} Fri
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---
+## 🗓 {{ .Sat }} Sat
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---
+## 🗓 {{ .Sun }} Sun
+### 🎯 Tasks
+- [ ]
+
+### 🗒 Notes
+*
+
+---------
+## 🚦 Problems of the Week
+`
+
 type Store interface {
-	CreateTemplate(templateName, pathToTemplate string, useSample ...bool) error
+	CreateTemplate(templateName, pathToTemplate string, useSample bool) error
 	DeleteTemplate(templateName string) error
 	GetPathToTemplate(templateName string) string
 	ListTemplates() ([]os.FileInfo, error)
@@ -37,12 +99,23 @@ func (fstore *FileStore) CreateFile(fileName, filePath string) (afero.File, erro
 	return file, nil
 }
 
-func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, useSample ...bool) error {
+func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, useSample bool) error {
 	// Create an empty template
 	templatePath := fstore.GetPathToTemplate(templateName)
 	file, err := fstore.fileSystem.Create(templatePath)
 	if err != nil {
 		return err
+	}
+
+	// Create sample template
+	fmt.Printf("Checking template: Sample %v", useSample)
+	if useSample {
+		fmt.Printf("Using template: Sample %v", useSample)
+		err := fstore.createSampleTemplate(file)
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 
 	// Create template from url
@@ -75,17 +148,6 @@ func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, use
 		_, err = file.WriteString(string(data))
 		if err != nil {
 			return err
-		}
-	}
-
-	// Create sample template
-	if useSampleTemplate(useSample) {
-		if len(useSample) > 0 && useSample[0] {
-			err := fstore.createSampleTemplate(file)
-			if err != nil {
-				return err
-			}
-			return nil
 		}
 	}
 
@@ -124,8 +186,7 @@ func (fstore *FileStore) GetPathToTemplate(templateName string) string {
 }
 
 func (fstore *FileStore) createSampleTemplate(file afero.File) error {
-	const sampleTemplate string = `# 🗓 8.1 Thur`
-	_, err := file.WriteString(string(sampleTemplate))
+	_, err := file.WriteString(string(sampletemplate))
 	if err != nil {
 		return err
 	}

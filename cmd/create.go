@@ -15,7 +15,7 @@ var createFunc = func(cmd *cobra.Command, args []string) {
 	templateName = args[0]
 	err := editor.Create(templateName, pathToTemplate, sampleTemplate)
 	if err != nil {
-		errAndExit("Not able to create a template")
+		errAndExit("Not able to create a template " + err.Error())
 	}
 }
 
