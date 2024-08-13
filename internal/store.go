@@ -1,7 +1,6 @@
 package store
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -108,9 +107,7 @@ func (fstore *FileStore) CreateTemplate(templateName, pathToTemplate string, use
 	}
 
 	// Create sample template
-	fmt.Printf("Checking template: Sample %v", useSample)
 	if useSample {
-		fmt.Printf("Using template: Sample %v", useSample)
 		err := fstore.createSampleTemplate(file)
 		if err != nil {
 			return err

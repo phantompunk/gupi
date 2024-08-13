@@ -79,6 +79,7 @@ func (e *Editor) List() error {
 	for _, files := range files {
 		fmt.Printf("\n%-15s %-15v %v", files.Name(), files.Size(), files.ModTime().Format("2006-01-02 15:04:05"))
 	}
+	fmt.Println()
 
 	return nil
 }
