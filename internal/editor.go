@@ -37,11 +37,12 @@ func (e *Editor) New(fileName, filePath, templateName string) error {
 		return err
 	}
 
-	fileDir, err := filepath.Abs(filePath)
+	newFilePath := filepath.Join(filePath, fileName)
+	absFilePath, err := filepath.Abs(newFilePath)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Created '%s' in '%s'\n", fileName, filepath.Join(fileDir, fileName))
+	fmt.Printf("Created '%s' in '%s'\n", fileName, absFilePath)
 	return nil
 }
 
