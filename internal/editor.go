@@ -126,6 +126,8 @@ func getTemplateData() any {
 	now := time.Now()
 	year, week := now.ISOWeek()
 
+	date := now.Local().Format("Y.m.d")
+
 	firstDayOfWeek := now.AddDate(0, 0, -days[int(now.Weekday())])
 	_, m, d := firstDayOfWeek.Date()
 	monday := fmt.Sprintf("%d.%d", m, d)
@@ -150,10 +152,12 @@ func getTemplateData() any {
 
 	return struct {
 		Year, Week int
+		Date string
 		Mon, Tue, Wed, Thu, Fri, Sat, Sun string
 	}{
 		Year: year,
 		Week: week,
+		Date: date,
 		Mon: monday,
 		Tue: tuesday,
 		Wed: wednesday,
