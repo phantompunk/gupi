@@ -10,8 +10,8 @@ var outputPath string
 
 var newCmd = &cobra.Command{
 	Use: "new",
-	Short: "Add a new template",
-	Long: "Add a new template from a file path or URL",
+	Short: "Create a file based on a template",
+	Long: "Create a file based on a template",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			errAndExit("Needs a file name")

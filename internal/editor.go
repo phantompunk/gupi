@@ -47,6 +47,10 @@ func (e *Editor) New(fileName, filePath, templateName string) error {
 }
 
 func (e *Editor) Create(templateName, pathToTemplate string, useSampleTemplate bool) error {
+	if pathToTemplate == "" && !useSampleTemplate {
+		return e.Edit(templateName)
+	}
+
 	err := e.store.CreateTemplate(templateName, pathToTemplate, useSampleTemplate)
 	if err != nil {
 		return err

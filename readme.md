@@ -57,3 +57,4 @@ Gupi is a CLI to manage and render templates.
   - `.Week`
   - `.Year`
   - `.Mon` - `.Sun`
+  - `.Date`
