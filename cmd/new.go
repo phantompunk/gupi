@@ -7,6 +7,7 @@ import (
 var templateName string
 var fileName string
 var outputPath string
+var nextWeek bool
 
 var newCmd = &cobra.Command{
 	Use: "new",
@@ -18,7 +19,7 @@ var newCmd = &cobra.Command{
 		}
 
 		fileName = args[0]
-		err := editor.New(fileName, outputPath, templateName)
+		err := editor.New(fileName, outputPath, templateName, nextWeek)
 		if err != nil {
 			errAndExit("Not able to add template" + err.Error())
 		}
@@ -28,5 +29,6 @@ var newCmd = &cobra.Command{
 func init() {
 	newCmd.Flags().StringVarP(&templateName, "template", "t", "", "")
 	newCmd.Flags().StringVarP(&outputPath, "output", "o", ".", "")
+	newCmd.Flags().BoolVarP(&nextWeek, "next-week", "n", false, "Modify internal date 1 week ahead")
 	rootCmd.AddCommand(newCmd)
 }

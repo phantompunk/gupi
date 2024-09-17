@@ -18,9 +18,9 @@ func NewEditor(s Store) *Editor {
 	return &Editor{store: s}
 }
 
-func (e *Editor) New(fileName, filePath, templateName string) error {
+func (e *Editor) New(fileName, filePath, templateName string, useNextWeek bool) error {
 	funcMap := initTplFunctions()
-	data := getTemplateData()
+	data := getTemplateData(useNextWeek)
 	templatePath := e.store.GetPathToTemplate(templateName)
 	fileTemplate, err := template.New(templateName).Funcs(funcMap).ParseFiles(templatePath)
 	if err != nil {
@@ -126,8 +126,12 @@ var days = map[int]int{
 	6: -2,
 }
 
-func getTemplateData() any {
+func getTemplateData(useNextWeek bool) any {
 	now := time.Now()
+	if useNextWeek {
+		now = now.AddDate(0, 0, 7)
+	}
+
 	year, week := now.ISOWeek()
 
 	date := now.Local().Format("Y.m.d")
@@ -155,19 +159,19 @@ func getTemplateData() any {
 	sunday := fmt.Sprintf("%d.%d", m, d)
 
 	return struct {
-		Year, Week int
-		Date string
+		Year, Week                        int
+		Date                              string
 		Mon, Tue, Wed, Thu, Fri, Sat, Sun string
 	}{
 		Year: year,
 		Week: week,
 		Date: date,
-		Mon: monday,
-		Tue: tuesday,
-		Wed: wednesday,
-		Thu: thursday,
-		Fri: friday,
-		Sat: saturday,
-		Sun: sunday,
+		Mon:  monday,
+		Tue:  tuesday,
+		Wed:  wednesday,
+		Thu:  thursday,
+		Fri:  friday,
+		Sat:  saturday,
+		Sun:  sunday,
 	}
 }
