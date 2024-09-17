@@ -15,6 +15,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List available templates",
 	Long: "List all currently avaible templates",
+	Aliases: []string{"ls"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := editor.List(); err != nil {
 			fmt.Fprint(os.Stderr, err.Error(), "\n")
