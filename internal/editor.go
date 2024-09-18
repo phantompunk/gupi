@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"text/template"
 	"time"
+
+	"github.com/dustin/go-humanize"
+	"github.com/olekukonko/tablewriter"
 )
 
 type Editor struct {
@@ -80,11 +83,20 @@ func (e *Editor) List() error {
 		return errors.New("Unable to read templates")
 	}
 
-	fmt.Printf("NAME\t\tSIZE\t\tMODIFIED")
-	for _, files := range files {
-		fmt.Printf("\n%-15s %-15v %v", files.Name(), files.Size(), files.ModTime().Format("2006-01-02 15:04:05"))
+	fileList := [][]string{}
+	for _, file := range files {
+		fileSize := humanize.Bytes(uint64(file.Size()))
+		updatedAt := humanize.Time(file.ModTime())
+		fileList = append(fileList, []string{file.Name(), fileSize, updatedAt})
 	}
-	fmt.Println()
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Name", "Size", "Updated"})
+
+	for _, v := range fileList {
+		table.Append(v)
+	}
+	table.Render() // Send output
 
 	return nil
 }
