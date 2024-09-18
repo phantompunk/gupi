@@ -1,6 +1,8 @@
 # Gupi
 Gupi is a CLI to manage and render templates.
 
+![gupi-help-screen](./assets/gupi-help.webp)
+
 ## Installation
 ```bash
 > go install https://github.com/phantompunk/gupi@latest
@@ -42,7 +44,7 @@ Gupi is a CLI to manage and render templates.
 ### Use template from the web
 
 ```bash
-> gupi create web -f "https://gist.githubusercontent.com/phantompunk/a3368b75e1b0ea843d12d96b949581b6/raw/c77344716ab7a69387b742fb098cec661c2ee4d7/weekly-template.md"
+> gupi create weekly -f "https://gist.githubusercontent.com/phantompunk/a3368b75e1b0ea843d12d96b949581b6/raw/c77344716ab7a69387b742fb098cec661c2ee4d7/weekly-template.md"
 ```
 
 ### Create a template with a dynamic name
