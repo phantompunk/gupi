@@ -11,8 +11,8 @@ var nextWeek bool
 
 var newCmd = &cobra.Command{
 	Use: "new",
-	Short: "Create a file based on a template",
-	Long: "Create a file based on a template",
+	Short: "Render a new file based on a template",
+	Long: "Render a new file based on a template",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
 			errAndExit("Needs a file name")
@@ -24,11 +24,12 @@ var newCmd = &cobra.Command{
 			errAndExit("Not able to add template" + err.Error())
 		}
 	},
+	Args: cobra.ExactArgs(1),
 }
 
 func init() {
-	newCmd.Flags().StringVarP(&templateName, "template", "t", "", "")
-	newCmd.Flags().StringVarP(&outputPath, "output", "o", ".", "")
+	newCmd.Flags().StringVarP(&templateName, "template", "t", "", "Template name to render")
+	newCmd.Flags().StringVarP(&outputPath, "output", "o", ".", "Write to output path")
 	newCmd.Flags().BoolVarP(&nextWeek, "next-week", "n", false, "Modify internal date 1 week ahead")
 	rootCmd.AddCommand(newCmd)
 }

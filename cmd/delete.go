@@ -21,6 +21,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Remove a template",
 	Long:  "Removes a specific templates from the saved directory",
 	Run:   deleteFunc,
+	Args: cobra.ExactArgs(1),
 }
 
 func init() {

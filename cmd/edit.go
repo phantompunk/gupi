@@ -22,6 +22,7 @@ var editCmd = &cobra.Command{
 		}
 		fmt.Printf("gupi: Template '%s' was edited\n", templateName)
 	},
+	Args: cobra.ExactArgs(1),
 }
 
 func init() {

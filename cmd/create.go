@@ -23,10 +23,11 @@ var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a new template",
 	Run:   createFunc,
+	Args: cobra.ExactArgs(1),
 }
 
 func init() {
-	createCmd.Flags().BoolVarP(&sampleTemplate, "sample", "s", false, "Use a sample template")
-	createCmd.Flags().StringVarP(&pathToTemplate, "file", "f", "", "Path to template")
+	createCmd.Flags().BoolVarP(&sampleTemplate, "sample", "s", false, "Create from a sample template")
+	createCmd.Flags().StringVarP(&pathToTemplate, "file", "f", "", "Filename, existing template name, or URL to file to create the template")
 	rootCmd.AddCommand(createCmd)
 }
