@@ -18,6 +18,7 @@ var deleteFunc = func(cmd *cobra.Command, args []string) {
 
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
+	Aliases: []string{"remove", "rm"},
 	Short: "Remove a template",
 	Long:  "Removes a specific templates from the saved directory",
 	Run:   deleteFunc,
