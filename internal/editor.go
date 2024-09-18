@@ -121,6 +121,10 @@ func findTextEditor() string {
 		return "nvim"
 	} else if isCommandAvailable("vim") {
 		return "vim"
+	} else if isCommandAvailable("nano") {
+		return "nano"
+	} else if isCommandAvailable("editor") {
+		return "editor"
 	} else {
 		return "vi"
 	}
