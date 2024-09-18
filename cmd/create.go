@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +19,7 @@ var createFunc = func(cmd *cobra.Command, args []string) {
 	if err != nil {
 		errAndExit("Not able to create a template " + err.Error())
 	}
+	fmt.Printf("gupi: Created template '%s'\n", templateName)
 }
 
 var createCmd = &cobra.Command{

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +16,7 @@ var deleteFunc = func(cmd *cobra.Command, args []string) {
 	if err != nil {
 		errAndExit("Failed to remove template: " + fileName)
 	}
+	fmt.Printf("gupi: Deleted Template '%s'\n", fileName)
 }
 
 var deleteCmd = &cobra.Command{

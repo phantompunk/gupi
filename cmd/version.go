@@ -19,9 +19,9 @@ var versionCmd = &cobra.Command{
 	Long:  "Print the app version and build info for the current context",
 	Run: func(cmd *cobra.Command, args []string) {
 		if short {
-			fmt.Printf("gupi version: v%s", version)
+			fmt.Printf("gupi version: v%s\n", version)
 		} else {
-			fmt.Printf("gupi version: v%s, build: %s", version, build)
+			fmt.Printf("gupi version: v%s, build: %s\n", version, build)
 		}
 		os.Exit(0)
 	},
