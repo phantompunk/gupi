@@ -18,7 +18,7 @@ var editCmd = &cobra.Command{
 		templateName := args[0]
 		err := editor.Edit(templateName)
 		if err != nil {
-			errAndExit("Unable to edit template")
+			errAndExit("Unable to edit template\n" + err.Error())
 		}
 		fmt.Printf("gupi: Template '%s' was edited\n", templateName)
 	},

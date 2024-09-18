@@ -91,9 +91,9 @@ func (e *Editor) List() error {
 
 func (e *Editor) openWithEditor(templateName string) error {
 	templatePath := e.store.GetPathToTemplate(templateName)
+	textEditor := findTextEditor()
 
-	fmt.Println("Opening in vim")
-	command := exec.Command("vim", templatePath)
+	command := exec.Command(textEditor, templatePath)
 	command.Stdout = os.Stdout
 	command.Stdin = os.Stdin
 	command.Stderr = os.Stderr
@@ -102,6 +102,24 @@ func (e *Editor) openWithEditor(templateName string) error {
 		return err
 	}
 	return nil
+}
+
+func findTextEditor() string {
+	if isCommandAvailable("nvim") {
+		return "nvim"
+	} else if isCommandAvailable("vim") {
+		return "vim"
+	} else {
+		return "vi"
+	}
+}
+
+func isCommandAvailable(name string) bool {
+	cmd := exec.Command("command", "-v", name)
+	if err := cmd.Run(); err != nil {
+		return false
+	}
+	return true
 }
 
 func initTplFunctions() template.FuncMap {
